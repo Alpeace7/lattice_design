@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "my-lattice-tools"
+version = "0.1.0"
+
+[tool.setuptools]
+packages = ["utils"]

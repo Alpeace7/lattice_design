@@ -1,0 +1,4 @@
+/.venv
+/__pycache__
+/my_lattice_tools.egg-info
+/particles_1000_turns.pkl
