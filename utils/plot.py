@@ -66,6 +66,8 @@ def meshgrid_extent(X, Y, origin='lower'):
 def linear(ring: at.lattice, ring0='TDR-1', ax=None, twin=None, UC_tunes=True, **kwargs):
     if ax is None:
         fig, ax = plt.subplots()
+
+    if twin is None:
         twin = ax.twinx()
 
     """ Calculation """
@@ -89,14 +91,17 @@ def linear(ring: at.lattice, ring0='TDR-1', ax=None, twin=None, UC_tunes=True, *
         index_UC = np.array([*index_UC, len(ring)])
 
     if UC_tunes and len(index_UC) >= 2:
-        for i, index in enumerate(index_UC):
-
-            if i != len(index_UC)-1: 
-                plt.axvline(s[index], linewidth=1, color='black')
-            if i != 0:  
-                Q_UC = np.round((elemdata.mu[index] - elemdata.mu[index_UC[i-1]])/(2*np.pi), 3)
-                s_mid = np.mean(s[index_UC[i-1:i+1]])
-                ax.text(s_mid, ax.get_ylim()[1], f'{Q_UC[0]}\n{Q_UC[1]}', ha='center', va='top')
+        for i, index in enumerate(index_UC[:-1]):
+            Q_UC = np.round((elemdata.mu[index] - elemdata.mu[index_UC[i-1]])/(2*np.pi), 3)
+            
+            s_mid = np.mean(s[index_UC[i-1:i+1]])
+            ax.text(s_mid, ax.get_ylim()[1], f'{Q_UC[0]}\n{Q_UC[1]}', ha='center', va='top')
+            plt.axvline(s[index], linewidth=1, color='black')
+   
+        Q = 20*elemdata.mu[-1]/(2*np.pi)
+        s_mid = np.mean(s[index_UC[-2:]])
+        plt.axvline(s[index], linewidth=1, color='black')
+        ax.text(s_mid, ax.get_ylim()[1], f'$Q_x={Q[0]:.3f}$\n$Q_y={Q[1]:.3f}$', ha='center', va='top')
 
     # Axis limits
     ax.set_xlim(s.min(), s.max())

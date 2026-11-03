@@ -3,7 +3,7 @@ import at
 from copy import deepcopy
 
 
-def replace_family(ring, FamName, replacement: at.Lattice, pad=True, alternate=False):
+def replace_family(ring: at.Lattice, FamName: str, replacement: at.Lattice, pad=True, alternate=False):
     """Replaces all instances of a family with a replacement.
 
     Consecutive instances of ``FamName`` are treated as a single group.
@@ -98,3 +98,10 @@ def get_PolynomB_scale(ring, refpts, PolynomB0):
         scaling = element.PolynomB / PolynomB
 
     return np.nanmean(scaling)
+
+def get_length(lattice: at.Lattice|at.Element):
+    """ The total length of the elements in a lattice. Does not account for periodicity. """
+    if type(lattice) == at.Lattice:
+        return lattice.get_s_pos()[-1]
+    else:
+        return lattice.Length
