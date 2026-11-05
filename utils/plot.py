@@ -110,7 +110,7 @@ def linear(ring: at.lattice, ring0='TDR-1', ax=None, twin=None, UC_tunes=True, *
     """ Plot baseline """
     if ring0 is not None:
         if ring0 == 'TDR-1':
-            with open('candidates/n01_02_01_01/ring.pkl', 'rb') as file:
+            with open('/gpfs/offline1/staff/common/alfpet/git/lattice_design/candidates/n01_02_01_01/ring.pkl', 'rb') as file: # TODO: Dont use a absolute filepath
                 ring0 = pickle.load(file)
 
         linear(ring0, None, ax, twin, UC_tunes=False, ls='--')
@@ -122,16 +122,33 @@ def plot_magnet(lattice, axs=None):
     if axs is None:
         fig, axs = plt.subplots(2, 1)
 
+    # Add twin axes that always 
+    def sync_axes(ax):
+        factor = ax._twin_factor
+        ax._twin_ax.set_ylim(factor * ax.get_ylim()[0], factor * ax.get_ylim()[1])
+    for ax in axs:
+        if not hasattr(ax, '_twin_ax'):
+            ax._twin_ax = ax.twinx()
+            ax.callbacks.connect('ylim_changed', sync_axes)
+
+        ax._twin_factor = lattice.BRho
+        sync_axes(ax)
+
     if type(lattice) != at.Lattice:
         lattice = at.Lattice([lattice], energy=3000000000.0)
     s_D2 = at.get_s_pos(lattice)
 
-    angle_dist = [e.BendingAngle/e.Length if hasattr(e, 'BendingAngle') else 0 for e in lattice]
-    K_dist = [e.PolynomB[1] if hasattr(e, 'PolynomB') else 0 for e in lattice]
+    rho_inv = [e.BendingAngle/e.Length if hasattr(e, 'BendingAngle') else 0 for e in lattice]
+    K = [e.PolynomB[1] if hasattr(e, 'PolynomB') else 0 for e in lattice]
 
-    axs[0].stairs(angle_dist, s_D2)
-    axs[1].stairs(K_dist, s_D2)
+    axs[0].stairs(rho_inv, s_D2)
+    axs[1].stairs(K, s_D2)
 
-    axs[0].set_ylabel('Bending strength [$^{-1}$]')
-    axs[1].set_ylabel('K [m$^{-2}$]')
     axs[1].set_xlabel('$s$ [m]')
+
+    axs[0].set_ylabel('Curvature [$m^{-1}$]')
+    axs[1].set_ylabel('K [m$^{-2}$]')
+
+    axs[0]._twin_ax.set_ylabel('Field [T]')
+    axs[1]._twin_ax.set_ylabel('Gradient [Tm$^{-1}$]')
+

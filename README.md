@@ -1,3 +1,6 @@
+# Lattice design
+This is an inofficial repo for documenting my own lattice design process.  
+
 ## Folders
 ### Candidates
 Lattice candidates. These files follow a shortened version of the naming convention, 
