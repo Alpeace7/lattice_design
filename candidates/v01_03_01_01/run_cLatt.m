@@ -5,12 +5,12 @@ verboselevel = 4;
 candidates_folder = '/gpfs/offline1/staff/common/alfpet/git/lattice_design/candidates/';
 
 % Lattice specific data
-lattice_version = 'v01-02-01-01';
-date = '261102';
+lattice_version = 'v01-03-01-01';
+date = '261104';
 lattice_name = ['m4U-' date '-' lattice_version];
 ver = 'v1'; % Lattice version suffix for elements
 
-description = 'Longitudinal gradient bend lattice starting from v01_01_03_01.';
+description = 'Longitudinal gradient bend lattice starting from v01_02_01_01, without LGB in the reverse bends.';
 
 % Load the ACHROMAT 
 lattice_folder = replace(lattice_version, '-', '_');
@@ -97,8 +97,8 @@ load('/gpfs/offline1/staff/common/alfpet/git/Max4U/CandidateLattices/m4_standard
 ACHRO_ref = m4_standard.ACHROMAT;
 
 %% Sets RF voltage
-% V0 = 1.0E6;
-V0 = 'auto';
+V0 = 1.0E6;
+% V0 = 'auto';
 bh = 'auto';
 
 %% Run cLatt options
