@@ -1,6 +1,12 @@
 import numpy as np
 import at
 from copy import deepcopy
+import pickle
+
+with open('candidates/n01_02_01_01/ring.pkl', 'rb') as file:
+    TDR_1 = pickle.load(file)
+
+geometry = TDR_1.get_geometry(at.End)[0] # The required endpoint geometry
 
 
 def replace_family(ring: at.Lattice, FamName: str, replacement: at.Lattice, pad=True, alternate=False):
@@ -105,3 +111,20 @@ def get_length(lattice: at.Lattice|at.Element):
         return lattice.get_s_pos()[-1]
     else:
         return lattice.Length
+
+def summary(ring):
+    """ Print a short summary of relevant design parameters. """
+    # TODO: Add more parameters
+    emittance = at.radiation_parameters(ring).emittances[0]
+    Qx, Qy = at.get_tune(ring, get_integer=True)
+    mcf = at.get_mcf(ring, fit_order=3, n_step=9)
+    D1_angle = np.degrees(np.sum([e.BendingAngle for e in ring if 'D1' in e.FamName]))/2
+    s_cro = np.mean([ring.get_s_pos('GE')[0], ring.get_s_pos('GS')[1]]) # TODO: Check s coordinate
+    sep_cro = -np.interp(s_cro, ring.get_s_pos(), ring.get_geometry()[0].y)
+
+    print(f'Emittance                  : {1e12*emittance:.1f} pm.rad')
+    print(f'Tunes                      : [{Qx:.3f}, {Qy:.3f}]')
+    print(f'Momentum compaction        : {mcf[0]:.2e} d {mcf[1]:+.2e} d^2 {mcf[2]:+.2e} d^3')
+    print(f'D1 angle                   : {D1_angle:.3f} degrees')
+    print(f'Crotch absorber separation : {1e3*sep_cro:.2f} mm')
+
