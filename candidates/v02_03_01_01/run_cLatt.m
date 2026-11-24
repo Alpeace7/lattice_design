@@ -5,12 +5,12 @@ verboselevel = 4;
 candidates_folder = '/gpfs/offline1/staff/common/alfpet/git/lattice_design/candidates/';
 
 % Lattice specific data
-lattice_version = 'v01-03-01-01';
-date = '261104';
+lattice_version = 'v02-03-01-01';
+date = '261116';
 lattice_name = ['m4U-' date '-' lattice_version];
-ver = 'v1'; % Lattice version suffix for elements
+ver = 'v2'; % Lattice version suffix for elements
 
-description = 'Longitudinal gradient bend lattice starting from v01_02_01_01, without LGB in the reverse bends.';
+description = 'LGB lattice starting from v01_03_01_01 with separate tuning of outer reverse bends and higher MCF.';
 
 % Load the ACHROMAT 
 lattice_folder = replace(lattice_version, '-', '_');
@@ -25,7 +25,6 @@ for i=2:length(ACHRO)
     ACHRO{i}.EApertures=[20.0 20.0]*1E-3;
     ACHRO{i}.RApertures=[-20.0 20.0 -20.0 20.0]*1e-3;
 end
-
 
 % Load standard cLoptions
 clear('cLoptions');
@@ -87,6 +86,9 @@ cLoptions.sumTabfams = {'D1_v1';'D2_v1';'';...
                               0 0 0 0 0 0];
 
 
+% cLoptions.ErrorModel    = errormodel_standard_20261030('gdran',1.0,...
+%                             'mgalran',1.0,'mulsys',1.0,'mulran',1.0, ...
+%                             'strran',1.0,'bpmran',1.0, 'sagran', 1.0);
 cLoptions.ErrorModel    = errormodel_Reduced('gdran',1.0,...
                             'mgalran',1.0,'mulsys',1.0,'mulran',1.0, ...
                             'strran',1.0,'bpmran',1.0, 'sagran', 1.0);
@@ -97,8 +99,8 @@ load('/gpfs/offline1/staff/common/alfpet/git/Max4U/CandidateLattices/m4_standard
 ACHRO_ref = m4_standard.ACHROMAT;
 
 %% Sets RF voltage
-V0 = 1.0E6;
-% V0 = 'auto';
+% V0 = 1.0E6;
+V0 = 'auto';
 bh = 'auto';
 
 %% Run cLatt options

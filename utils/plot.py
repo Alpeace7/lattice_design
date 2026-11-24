@@ -104,7 +104,7 @@ def linear(ring: at.lattice, ring0='TDR-1', ax=None, twin=None, UC_tunes=True, *
         ax.text(s_mid, ax.get_ylim()[1], f'$Q_x={Q[0]:.3f}$\n$Q_y={Q[1]:.3f}$', ha='center', va='top')
 
     # Axis limits
-    ax.set_xlim(s.min(), s.max())
+    ax.margins(x=0)
     align_twin(ax, twin)
 
     """ Plot baseline """
@@ -140,6 +140,9 @@ def plot_magnet(lattice, axs=None):
 
     rho_inv = [e.BendingAngle/e.Length if hasattr(e, 'BendingAngle') else 0 for e in lattice]
     K = [e.PolynomB[1] if hasattr(e, 'PolynomB') else 0 for e in lattice]
+
+    axs[0].margins(x=0)
+    axs[1].margins(x=0)
 
     axs[0].stairs(rho_inv, s_D2)
     axs[1].stairs(K, s_D2)
